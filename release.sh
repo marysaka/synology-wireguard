@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSIONS=(6.2 7.0)
+VERSIONS=(6.2 7.0 7.2)
 ARCHS=(
     "apollolake"
     "armada38x"
@@ -28,17 +28,18 @@ fi
 # Download all necessary tarballs before calling into the docker containers.
 echo "Downloading environment tarballs"
 for ver in ${VERSIONS[@]}; do
-    url_base="https://sourceforge.net/projects/dsgpl/files/toolkit/DSM$ver"
+    url_base="https://global.synologydownload.com/download/ToolChain/toolkit/$ver"
+    mkdir -p toolkit_tarballs
     pushd toolkit_tarballs/
     if [ ! -f base_env-$ver.txz ]; then
-        wget -q --show-progress "$url_base/base_env-$ver.txz"
+        wget -q --show-progress "$url_base/base/base_env-$ver.txz"
     fi
     for arch in ${ARCHS[@]}; do
         if [ ! -f ds.$arch-$ver.dev.txz ]; then
-            wget -q --show-progress "$url_base/ds.$arch-$ver.dev.txz"
+            wget -q --show-progress "$url_base/$arch/ds.$arch-$ver.dev.txz"
         fi
         if [ ! -f ds.$arch-$ver.env.txz ]; then
-            wget -q --show-progress "$url_base/ds.$arch-$ver.env.txz"
+            wget -q --show-progress "$url_base/$arch/ds.$arch-$ver.env.txz"
         fi
     done
     popd
